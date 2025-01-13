@@ -1,5 +1,5 @@
-# eth-jmeter-sample
-Stress test the rpc interface of the eth chain by implementing `java request`
+# fiber-jmeter-sample
+Stress test the rpc interface of the fiber chain by implementing `java request`
 
 ## require
 java8,maven,linux or mac(not support win)

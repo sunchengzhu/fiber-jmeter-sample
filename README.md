@@ -16,6 +16,9 @@ java8,maven,linux or mac(not support win)
 2. stress
 ```
 mvn jmeter:jmeter
-mvn jmeter:jmeter@configuration2 -DjmeterTest=FiberSendDemo.jmx
+rm -rf target/jmeter/ || rm -f jmeter.tar.gz || rm -f /tmp/scz/jmeter.tar.gz
+nohup mvn jmeter:jmeter@configuration2 -DjmeterTest=FiberSendDemo.jmx > /dev/null 2>&1 &
+tar -czf jmeter.tar.gz target/jmeter/
+mv jmeter.tar.gz /tmp/scz/
 ```
 

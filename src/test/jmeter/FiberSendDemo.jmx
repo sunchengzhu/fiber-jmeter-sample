@@ -16,7 +16,7 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="Threads initial delay">0</stringProp>
-        <stringProp name="Start users count">1</stringProp>
+        <stringProp name="Start users count">2</stringProp>
         <stringProp name="Start users count burst">2</stringProp>
         <stringProp name="Start users period">120</stringProp>
         <stringProp name="Stop users count">0</stringProp>

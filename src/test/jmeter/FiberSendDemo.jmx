@@ -34,17 +34,17 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="rpcUrl" elementType="Argument">
                 <stringProp name="Argument.name">rpcUrl</stringProp>
-                <stringProp name="Argument.value">http://127.0.0.1:8228</stringProp>
+                <stringProp name="Argument.value">http://172.31.16.223:8237</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="targetRpcUrl" elementType="Argument">
                 <stringProp name="Argument.name">targetRpcUrl</stringProp>
-                <stringProp name="Argument.value">http://127.0.0.1:8229</stringProp>
+                <stringProp name="Argument.value">http://172.31.23.160:8231</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="timeOut" elementType="Argument">
                 <stringProp name="Argument.name">timeOut</stringProp>
-                <stringProp name="Argument.value">1000</stringProp>
+                <stringProp name="Argument.value">6000</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="interval" elementType="Argument">

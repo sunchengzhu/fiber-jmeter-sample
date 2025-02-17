@@ -50,7 +50,7 @@ public class FiberSendPaymentRequest extends FiberBasicRequest {
     @Override
     public boolean run(JavaSamplerContext context) {
         try {
-            PaymentResponse paymentResponse = this.fiberClient.send_payment(new SendPaymentRequest(targetNodeId, "Fibd", "0x1", true, this.dry_run));
+            PaymentResponse paymentResponse = this.fiberClient.send_payment(new SendPaymentRequest(targetNodeId, "Fibt", "0x1", true, this.dry_run));
             if (this.dry_run) {
                 return true;
             }

@@ -21,7 +21,7 @@
         <stringProp name="Start users period">600</stringProp>
         <stringProp name="Stop users count">196</stringProp>
         <stringProp name="Stop users period">600</stringProp>
-        <stringProp name="flighttime">86400</stringProp>
+        <stringProp name="flighttime">600</stringProp>
         <stringProp name="rampUp">0</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -39,7 +39,7 @@
               </elementProp>
               <elementProp name="targetRpcUrl" elementType="Argument">
                 <stringProp name="Argument.name">targetRpcUrl</stringProp>
-                <stringProp name="Argument.value">http://172.31.23.160:8231</stringProp>
+                <stringProp name="Argument.value">http://172.31.23.160:8232</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="timeOut" elementType="Argument">

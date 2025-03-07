@@ -39,7 +39,7 @@
               </elementProp>
               <elementProp name="targetRpcUrl" elementType="Argument">
                 <stringProp name="Argument.name">targetRpcUrl</stringProp>
-                <stringProp name="Argument.value">http://172.31.23.160:8231</stringProp>
+                <stringProp name="Argument.value">http://172.31.23.160:8232</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="timeOut" elementType="Argument">

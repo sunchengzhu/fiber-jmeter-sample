@@ -14,10 +14,10 @@
     <hashTree>
       <kg.apc.jmeter.threads.SteppingThreadGroup guiclass="kg.apc.jmeter.threads.SteppingThreadGroupGui" testclass="kg.apc.jmeter.threads.SteppingThreadGroup" testname="jp@gc - Stepping Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">4</stringProp>
         <stringProp name="Threads initial delay">0</stringProp>
         <stringProp name="Start users count">4</stringProp>
-        <stringProp name="Start users count burst">10</stringProp>
+        <stringProp name="Start users count burst">4</stringProp>
         <stringProp name="Start users period">600</stringProp>
         <stringProp name="Stop users count">196</stringProp>
         <stringProp name="Stop users period">600</stringProp>
@@ -39,7 +39,7 @@
               </elementProp>
               <elementProp name="targetRpcUrl" elementType="Argument">
                 <stringProp name="Argument.name">targetRpcUrl</stringProp>
-                <stringProp name="Argument.value">http://172.31.23.160:8232</stringProp>
+                <stringProp name="Argument.value">http://172.31.23.160:8231</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="timeOut" elementType="Argument">

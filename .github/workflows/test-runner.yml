@@ -1,7 +1,7 @@
 name: Test Self-hosted Runner
 
 on:
-  workflow_dispatch: # 只允许手动触发
+  workflow_dispatch:
 
 jobs:
   run-on-test-03:
@@ -10,8 +10,16 @@ jobs:
       run:
         working-directory: /home/ckb/scz
     steps:
-      - name: Check working directory
-        run: pwd
+      - name: Kill fnn
+        run: |
+          pkill fnn
+          rm -rf fiber-stability-test-nodes
+
+      - name: Fund addresses
+        run: |
+          git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
+          cd fiber-stability-test-nodes
+          ./gradlew run
 
   run-on-test-04:
     runs-on: [self-hosted, test-04]

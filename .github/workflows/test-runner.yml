@@ -16,6 +16,7 @@ jobs:
           rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
           cd fiber-stability-test-nodes
+          gradle wrapper
           ./gradlew run
 
   run-on-test-04:

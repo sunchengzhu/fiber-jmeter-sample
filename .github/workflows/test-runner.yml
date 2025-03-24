@@ -20,6 +20,7 @@ jobs:
           echo $GRADLE_HOME
           gradle wrapper
           ./gradlew run
+        shell: bash -l {0}
 
   run-on-test-04:
     runs-on: [self-hosted, test-04]

@@ -10,13 +10,10 @@ jobs:
       run:
         working-directory: /home/ckb/scz
     steps:
-      - name: Kill fnn
-        run: |
-          pkill fnn
-          rm -rf fiber-stability-test-nodes
-
       - name: Fund addresses
         run: |
+          pkill fnn || true
+          rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
           cd fiber-stability-test-nodes
           ./gradlew run

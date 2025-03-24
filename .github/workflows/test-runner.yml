@@ -1,11 +1,23 @@
 name: Test Self-hosted Runner
 
 on:
-  workflow_dispatch:  # 只允许手动触发
+  workflow_dispatch: # 只允许手动触发
 
 jobs:
   run-on-test-03:
     runs-on: [self-hosted, test-03]
+    steps:
+      - name: Check working directory
+        run: pwd
+
+  run-on-test-04:
+    runs-on: [self-hosted, test-04]
+    steps:
+      - name: Check working directory
+        run: pwd
+
+  run-on-test-05:
+    runs-on: [self-hosted, test-05]
     steps:
       - name: Check working directory
         run: pwd

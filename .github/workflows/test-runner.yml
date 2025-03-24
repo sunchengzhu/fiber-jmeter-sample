@@ -20,11 +20,12 @@ jobs:
           ./gradlew run
       - name: Prepare
         run: |
-          pwd
-          cd remote
+          cd fiber-stability-test-nodes/remote
           bash 1_prepare.sh
       - name: Run
-        run: bash 2_run.sh
+        run: |
+          cd fiber-stability-test-nodes/remote
+          bash 2_run.sh
 
   run-on-test-04:
     runs-on: [self-hosted, test-04]

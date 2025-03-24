@@ -20,6 +20,7 @@ jobs:
           ./gradlew run
       - name: Prepare
         run: |
+          pwd
           cd remote
           bash 1_prepare.sh
       - name: Run

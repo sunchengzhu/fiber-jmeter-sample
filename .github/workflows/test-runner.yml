@@ -16,12 +16,8 @@ jobs:
           rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
           cd fiber-stability-test-nodes
-          gradle -version
-          echo $GRADLE_HOME
-          gradle wrapper
+          /opt/gradle/gradle-8.5/bin/gradle wrapper
           ./gradlew run
-        shell: bash -l {0}
-
   run-on-test-04:
     runs-on: [self-hosted, test-04]
     defaults:

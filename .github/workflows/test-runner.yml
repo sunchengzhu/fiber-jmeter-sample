@@ -6,18 +6,27 @@ on:
 jobs:
   run-on-test-03:
     runs-on: [self-hosted, test-03]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz
     steps:
       - name: Check working directory
         run: pwd
 
   run-on-test-04:
     runs-on: [self-hosted, test-04]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz
     steps:
       - name: Check working directory
         run: pwd
 
   run-on-test-05:
     runs-on: [self-hosted, test-05]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz
     steps:
       - name: Check working directory
         run: pwd

@@ -18,6 +18,13 @@ jobs:
           cd fiber-stability-test-nodes
           /opt/gradle/gradle-8.5/bin/gradle wrapper
           ./gradlew run
+      - name: Prepare
+        run: |
+          cd remote
+          bash 1_prepare.sh
+      - name: Run
+        run: bash 2_run.sh
+
   run-on-test-04:
     runs-on: [self-hosted, test-04]
     defaults:

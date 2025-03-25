@@ -36,6 +36,7 @@ jobs:
       - name: Clone fiber-stability-test-nodes
         run: |
           pkill fnn || true
+          rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
       - name: Prepare
         run: |
@@ -55,6 +56,7 @@ jobs:
       - name: Clone fiber-stability-test-nodes
         run: |
           pkill fnn || true
+          rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
       - name: Prepare
         run: |

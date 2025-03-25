@@ -23,9 +23,7 @@ jobs:
           cd fiber-stability-test-nodes/remote
           bash 1_prepare.sh
       - name: Run
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 2_run.sh
+        run: sudo systemctl start fnn.service
 
   run-on-test-04:
     runs-on: [self-hosted, test-04]
@@ -43,9 +41,7 @@ jobs:
           cd fiber-stability-test-nodes/remote
           bash 1_prepare.sh
       - name: Run
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 2_run.sh
+        run: sudo systemctl start fnn.service
 
   run-on-test-05:
     runs-on: [self-hosted, test-05]
@@ -63,9 +59,7 @@ jobs:
           cd fiber-stability-test-nodes/remote
           bash 1_prepare.sh
       - name: Run
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 2_run.sh
+        run: sudo systemctl start fnn.service
 
   connect-peer-test-03:
     runs-on: [self-hosted, test-03]

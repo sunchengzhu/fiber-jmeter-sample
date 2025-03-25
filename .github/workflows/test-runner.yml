@@ -31,55 +31,50 @@ jobs:
     runs-on: [self-hosted, test-04]
     defaults:
       run:
-        working-directory: /home/ckb/scz
+        working-directory: /home/ckb/scz/remote
     steps:
       - name: Prepare
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 1_prepare.sh
+        run: bash 1_prepare.sh
       - name: Run
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 2_run.sh
+        run: bash 2_run.sh
 
   run-on-test-05:
     runs-on: [self-hosted, test-05]
     defaults:
       run:
-        working-directory: /home/ckb/scz
+        working-directory: /home/ckb/scz/remote
     steps:
       - name: Prepare
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 1_prepare.sh
+        run: bash 1_prepare.sh
       - name: Run
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 2_run.sh
+        run: bash 2_run.sh
 
   connect-peer-test-03:
     runs-on: [self-hosted, test-03]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz/remote
     needs: [run-on-test-03, run-on-test-04, run-on-test-05]
     steps:
       - name: Connect Peer
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 3_connect_peer.sh
+        run: bash 3_connect_peer.sh
 
   connect-peer-test-04:
     runs-on: [self-hosted, test-04]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz/remote
     needs: [run-on-test-03, run-on-test-04, run-on-test-05]
     steps:
       - name: Connect Peer
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 3_connect_peer.sh
+        run: bash 3_connect_peer.sh
 
   connect-peer-test-05:
     runs-on: [self-hosted, test-05]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz/remote
     needs: [run-on-test-03, run-on-test-04, run-on-test-05]
     steps:
       - name: Connect Peer
-        run: |
-          cd fiber-stability-test-nodes/remote
-          bash 3_connect_peer.sh
+        run: bash 3_connect_peer.sh

@@ -31,29 +31,45 @@ jobs:
     runs-on: [self-hosted, test-04]
     defaults:
       run:
-        working-directory: /home/ckb/scz/remote
+        working-directory: /home/ckb/scz
     steps:
+      - name: Clone fiber-stability-test-nodes
+        run: |
+          pkill fnn || true
+          git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
       - name: Prepare
-        run: bash 1_prepare.sh
+        run: |
+          cd fiber-stability-test-nodes/remote
+          bash 1_prepare.sh
       - name: Run
-        run: bash 2_run.sh
+        run: |
+          cd fiber-stability-test-nodes/remote
+          bash 2_run.sh
 
   run-on-test-05:
     runs-on: [self-hosted, test-05]
     defaults:
       run:
-        working-directory: /home/ckb/scz/remote
+        working-directory: /home/ckb/scz
     steps:
+      - name: Clone fiber-stability-test-nodes
+        run: |
+          pkill fnn || true
+          git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
       - name: Prepare
-        run: bash 1_prepare.sh
+        run: |
+          cd fiber-stability-test-nodes/remote
+          bash 1_prepare.sh
       - name: Run
-        run: bash 2_run.sh
+        run: |
+          cd fiber-stability-test-nodes/remote
+          bash 2_run.sh
 
   connect-peer-test-03:
     runs-on: [self-hosted, test-03]
     defaults:
       run:
-        working-directory: /home/ckb/scz/remote
+        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
     needs: [run-on-test-03, run-on-test-04, run-on-test-05]
     steps:
       - name: Connect Peer
@@ -63,7 +79,7 @@ jobs:
     runs-on: [self-hosted, test-04]
     defaults:
       run:
-        working-directory: /home/ckb/scz/remote
+        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
     needs: [run-on-test-03, run-on-test-04, run-on-test-05]
     steps:
       - name: Connect Peer
@@ -73,7 +89,7 @@ jobs:
     runs-on: [self-hosted, test-05]
     defaults:
       run:
-        working-directory: /home/ckb/scz/remote
+        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
     needs: [run-on-test-03, run-on-test-04, run-on-test-05]
     steps:
       - name: Connect Peer

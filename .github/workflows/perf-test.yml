@@ -26,7 +26,8 @@ jobs:
           for ((i=start; i<=end; i++)); do
             arr+=($i)
           done
-          json=$(printf '%s\n' "${arr[@]}" | jq -R . | jq -s .)
+          # 生成紧凑的 JSON 数组，避免换行问题
+          json=$(printf '%s\n' "${arr[@]}" | jq -R . | jq -s -c .)
           echo "matrix=$json" >> $GITHUB_OUTPUT
 
   perf-test:
@@ -63,7 +64,6 @@ jobs:
       - name: Archive report
         run: |
           REPORT_NAME="${{ matrix.thread }}threads.tar.gz"
-          # 将测试报告目录重命名为纯线程数文件夹
           mv target/jmeter "${{ matrix.thread }}threads"
           tar -czf "$REPORT_NAME" "${{ matrix.thread }}threads"
         shell: bash

@@ -60,17 +60,40 @@ jobs:
             echo "Last test run, skipping sleep."
           fi
 
-      - name: Archive results
+      - name: Archive report
         run: |
-          TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y%m%d-%H%M')
-          FOLDER_NAME="${TIMESTAMP}-${{ matrix.thread }}threads"
-          mv target/jmeter "$FOLDER_NAME"
-          tar -czf "${FOLDER_NAME}.tar.gz" "$FOLDER_NAME"
-          echo "ARCHIVE_NAME=${FOLDER_NAME}.tar.gz" >> $GITHUB_ENV
-          echo "RESULT_NAME=${FOLDER_NAME}" >> $GITHUB_ENV
+          REPORT_NAME="${{ matrix.thread }}threads.tar.gz"
+          # 将测试报告目录重命名为纯线程数文件夹
+          mv target/jmeter "${{ matrix.thread }}threads"
+          tar -czf "$REPORT_NAME" "${{ matrix.thread }}threads"
+        shell: bash
 
-      - name: Upload archive
+      - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.RESULT_NAME }}
-          path: ${{ env.ARCHIVE_NAME }}
+          name: "report-${{ matrix.thread }}"
+          path: ${{ matrix.thread }}threads.tar.gz
+
+  aggregate-artifacts:
+    runs-on: ubuntu-latest
+    needs: perf-test
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: aggregated_reports
+
+      - name: Package all reports
+        run: |
+          TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y%m%d-%H%M')
+          FINAL_DIR="${TIMESTAMP}-${{ github.event.inputs.startThreadsCount }}-${{ github.event.inputs.endThreadsCount }}"
+          mkdir "$FINAL_DIR"
+          mv aggregated_reports/report-*.tar.gz "$FINAL_DIR"/
+          tar -czf "${FINAL_DIR}.tar.gz" "$FINAL_DIR"
+        shell: bash
+
+      - name: Upload final archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: aggregated-results
+          path: ${{ github.workspace }}/*.tar.gz

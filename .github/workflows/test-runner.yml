@@ -148,35 +148,35 @@ jobs:
           bash 6_test_a_to_g.sh
           bash count_channels.sh
 
-  shutdown-channel-test-03:
-    if: always()
-    runs-on: [self-hosted, test-03]
-    defaults:
-      run:
-        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [check-channels]
-    steps:
-      - name: Shutdown Channel
-        run: bash 5_shutdown_channel.sh
+  # shutdown-channel-test-03:
+  #   if: always()
+  #   runs-on: [self-hosted, test-03]
+  #   defaults:
+  #     run:
+  #       working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+  #   needs: [check-channels]
+  #   steps:
+  #     - name: Shutdown Channel
+  #       run: bash 5_shutdown_channel.sh
 
-  shutdown-channel-test-04:
-    if: always()
-    runs-on: [self-hosted, test-04]
-    defaults:
-      run:
-        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [check-channels]
-    steps:
-      - name: Shutdown Channel
-        run: bash 5_shutdown_channel.sh
+  # shutdown-channel-test-04:
+  #   if: always()
+  #   runs-on: [self-hosted, test-04]
+  #   defaults:
+  #     run:
+  #       working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+  #   needs: [check-channels]
+  #   steps:
+  #     - name: Shutdown Channel
+  #       run: bash 5_shutdown_channel.sh
 
-  shutdown-channel-test-05:
-    if: always()
-    runs-on: [self-hosted, test-05]
-    defaults:
-      run:
-        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [check-channels]
-    steps:
-      - name: Shutdown Channel
-        run: bash 5_shutdown_channel.sh
+  # shutdown-channel-test-05:
+  #   if: always()
+  #   runs-on: [self-hosted, test-05]
+  #   defaults:
+  #     run:
+  #       working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+  #   needs: [check-channels]
+  #   steps:
+  #     - name: Shutdown Channel
+  #       run: bash 5_shutdown_channel.sh

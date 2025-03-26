@@ -1,0 +1,16 @@
+name: Perf Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [self-hosted, test-02]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show current dir
+        run: |
+          pwd
+          ls -la

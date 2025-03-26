@@ -144,7 +144,9 @@ jobs:
     needs: [open-channel-test-03, open-channel-test-04, open-channel-test-05]
     steps:
       - name: Test a to g
-        run: bash 6_test_a_to_g.sh
+        run: |
+          bash 6_test_a_to_g.sh
+          bash count_channels.sh
 
   shutdown-channel-test-03:
     if: always()

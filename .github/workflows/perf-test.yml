@@ -9,7 +9,7 @@ on:
         default: "4"
 
 jobs:
-  build:
+  perf-test:
     runs-on: [self-hosted, test-02]
     steps:
       - name: Checkout code
@@ -40,3 +40,13 @@ jobs:
         with:
           name: jmeter-results
           path: ${{ env.ARCHIVE_NAME }}
+
+  count-channels:
+    runs-on: [self-hosted, test-03]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+    needs: [perf-test]
+    steps:
+      - name: Count channels
+        run: bash count_channels.sh

@@ -19,9 +19,7 @@ jobs:
         run: |
           echo "Setting threadCount to: ${{ github.event.inputs.threadCount }}"
           xmlstarlet ed -L -u '//stringProp[@name="ThreadGroup.num_threads"]' -v '${{ github.event.inputs.threadCount }}' src/test/jmeter/perf.jmx
-          xmlstarlet ed -L -u '//stringProp[@name="Start users count burst"]' -v '${{ github.event.inputs.threadCount }}' src/test/jmeter/perf.jmx
           echo "Current threads num: $(xmlstarlet sel -t -v '//stringProp[@name="ThreadGroup.num_threads"]' src/test/jmeter/perf.jmx)"
-          echo "Current burst count: $(xmlstarlet sel -t -v '//stringProp[@name="Start users count burst"]' src/test/jmeter/perf.jmx)"
 
       - name: Run JMeter Test
         run: |
@@ -31,16 +29,16 @@ jobs:
       - name: Archive results
         run: |
           TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y%m%d-%H%M')
-          THREADS=${{ github.event.inputs.threadCount }}
-          FOLDER_NAME="${TIMESTAMP}-${THREADS}threads"
+          FOLDER_NAME="${TIMESTAMP}-${{ github.event.inputs.threadCount }}threads"
           mv target/jmeter "$FOLDER_NAME"
-          tar -czf "$FOLDER_NAME.tar.gz" "$FOLDER_NAME"
-          echo "ARCHIVE_NAME=$FOLDER_NAME.tar.gz" >> $GITHUB_ENV
+          tar -czf "${FOLDER_NAME}.tar.gz" "$FOLDER_NAME"
+          echo "ARCHIVE_NAME=${FOLDER_NAME}.tar.gz" >> $GITHUB_ENV
+          echo "RESULT_NAME=${FOLDER_NAME}" >> $GITHUB_ENV
 
       - name: Upload archive
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARCHIVE_NAME }}
+          name: ${{ env.RESULT_NAME }}
           path: ${{ env.ARCHIVE_NAME }}
 
   count-channels:

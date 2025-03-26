@@ -1,4 +1,4 @@
-name: Test Self-hosted Runner
+name: Run Fiber Testnet Nodes
 
 on:
   workflow_dispatch:

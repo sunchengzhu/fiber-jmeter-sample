@@ -43,7 +43,7 @@ jobs:
 
       - name: Configure JMX
         run: |
-          echo "Setting thread count to: ${{ matrix.thread }}"
+          echo "Setting thread count to ${{ matrix.thread }}"
           xmlstarlet ed -L -u '//stringProp[@name="ThreadGroup.num_threads"]' -v '${{ matrix.thread }}' src/test/jmeter/perf.jmx
           echo "Current thread count: $(xmlstarlet sel -t -v '//stringProp[@name="ThreadGroup.num_threads"]' src/test/jmeter/perf.jmx)"
 

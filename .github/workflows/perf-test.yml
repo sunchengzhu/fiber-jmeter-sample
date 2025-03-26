@@ -68,6 +68,7 @@ jobs:
           REPORT_NAME="${REPORT_DIR}.tar.gz"
           mv target/jmeter "$REPORT_DIR"
           tar -czf "$REPORT_NAME" "$REPORT_DIR"
+          echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
           echo "REPORT_NAME=$REPORT_NAME" >> $GITHUB_ENV
         shell: bash
 

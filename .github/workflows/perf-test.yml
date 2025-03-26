@@ -18,7 +18,9 @@ jobs:
       - name: Configure JMX
         run: |
           echo "Setting threadCount to: ${{ github.event.inputs.threadCount }}"
+          xmlstarlet ed -L -u '//stringProp[@name="ThreadGroup.num_threads"]' -v '${{ github.event.inputs.threadCount }}' src/test/jmeter/perf.jmx
           xmlstarlet ed -L -u '//stringProp[@name="Start users count burst"]' -v '${{ github.event.inputs.threadCount }}' src/test/jmeter/perf.jmx
+          echo "Current threads num: $(xmlstarlet sel -t -v '//stringProp[@name="ThreadGroup.num_threads"]' src/test/jmeter/perf.jmx)"
           echo "Current burst count: $(xmlstarlet sel -t -v '//stringProp[@name="Start users count burst"]' src/test/jmeter/perf.jmx)"
 
       - name: Run JMeter Test
@@ -38,7 +40,7 @@ jobs:
       - name: Upload archive
         uses: actions/upload-artifact@v4
         with:
-          name: jmeter-results
+          name: ${{ env.ARCHIVE_NAME }}
           path: ${{ env.ARCHIVE_NAME }}
 
   count-channels:

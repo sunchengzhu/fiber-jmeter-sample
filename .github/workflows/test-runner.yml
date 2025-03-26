@@ -112,17 +112,17 @@ jobs:
           bash 4_open_channel.sh
           bash count_channels.sh
 
-  open-channel-test-04:
-    runs-on: [self-hosted, test-04]
-    defaults:
-      run:
-        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [connect-peer-test-03, connect-peer-test-04, connect-peer-test-05]
-    steps:
-      - name: Open channel
-        run: |
-          bash 4_open_channel.sh
-          bash count_channels.sh
+  # open-channel-test-04:
+  #   runs-on: [self-hosted, test-04]
+  #   defaults:
+  #     run:
+  #       working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+  #   needs: [connect-peer-test-03, connect-peer-test-04, connect-peer-test-05]
+  #   steps:
+  #     - name: Open channel
+  #       run: |
+  #         bash 4_open_channel.sh
+  #         bash count_channels.sh
 
   open-channel-test-05:
     runs-on: [self-hosted, test-05]

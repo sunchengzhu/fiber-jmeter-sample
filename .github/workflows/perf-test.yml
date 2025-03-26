@@ -3,33 +3,67 @@ name: Perf Test
 on:
   workflow_dispatch:
     inputs:
-      threadCount:
-        description: "Number of threads (users)"
+      startThreadsCount:
+        description: "Start thread count"
         required: false
         default: "4"
+      endThreadsCount:
+        description: "End thread count"
+        required: false
+        default: "6"
 
 jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: |
+          start=${{ github.event.inputs.startThreadsCount }}
+          end=${{ github.event.inputs.endThreadsCount }}
+          arr=()
+          for ((i=start; i<=end; i++)); do
+            arr+=($i)
+          done
+          json=$(printf '%s\n' "${arr[@]}" | jq -R . | jq -s .)
+          echo "matrix=$json" >> $GITHUB_OUTPUT
+
   perf-test:
+    needs: generate-matrix
     runs-on: [self-hosted, test-02]
+    strategy:
+      max-parallel: 1 # 顺序执行
+      matrix:
+        thread: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Configure JMX
         run: |
-          echo "Setting threadCount to: ${{ github.event.inputs.threadCount }}"
-          xmlstarlet ed -L -u '//stringProp[@name="ThreadGroup.num_threads"]' -v '${{ github.event.inputs.threadCount }}' src/test/jmeter/perf.jmx
-          echo "Current threads num: $(xmlstarlet sel -t -v '//stringProp[@name="ThreadGroup.num_threads"]' src/test/jmeter/perf.jmx)"
+          echo "Setting thread count to: ${{ matrix.thread }}"
+          xmlstarlet ed -L -u '//stringProp[@name="ThreadGroup.num_threads"]' -v '${{ matrix.thread }}' src/test/jmeter/perf.jmx
+          echo "Current thread count: $(xmlstarlet sel -t -v '//stringProp[@name="ThreadGroup.num_threads"]' src/test/jmeter/perf.jmx)"
 
       - name: Run JMeter Test
+        env:
+          CURRENT_THREAD: ${{ matrix.thread }}
+          END_THREAD: ${{ github.event.inputs.endThreadsCount }}
         run: |
           mvn -q package
           mvn -q jmeter:jmeter@configuration2 -DjmeterTest=perf.jmx
+          if [ "$CURRENT_THREAD" != "$END_THREAD" ]; then
+            echo "Not the last test run, sleeping 300 seconds..."
+            sleep 300
+          else
+            echo "Last test run, skipping sleep."
+          fi
 
       - name: Archive results
         run: |
           TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y%m%d-%H%M')
-          FOLDER_NAME="${TIMESTAMP}-${{ github.event.inputs.threadCount }}threads"
+          FOLDER_NAME="${TIMESTAMP}-${{ matrix.thread }}threads"
           mv target/jmeter "$FOLDER_NAME"
           tar -czf "${FOLDER_NAME}.tar.gz" "$FOLDER_NAME"
           echo "ARCHIVE_NAME=${FOLDER_NAME}.tar.gz" >> $GITHUB_ENV
@@ -40,13 +74,3 @@ jobs:
         with:
           name: ${{ env.RESULT_NAME }}
           path: ${{ env.ARCHIVE_NAME }}
-
-  count-channels:
-    runs-on: [self-hosted, test-03]
-    defaults:
-      run:
-        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [perf-test]
-    steps:
-      - name: Count channels
-        run: bash count_channels.sh

@@ -23,7 +23,7 @@ jobs:
 
       - name: Run JMeter Test
         run: |
-          mvn package
+          mvn -q package
           mvn -q jmeter:jmeter@configuration2 -DjmeterTest=perf.jmx
 
       - name: Archive results

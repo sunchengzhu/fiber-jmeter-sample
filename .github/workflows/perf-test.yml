@@ -2,6 +2,11 @@ name: Perf Test
 
 on:
   workflow_dispatch:
+    inputs:
+      threadCount:
+        description: "Number of threads (users)"
+        required: false
+        default: "4"
 
 jobs:
   build:
@@ -10,7 +15,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Show current dir
+      - name: Perf
         run: |
-          pwd
-          ls -la
+          xmlstarlet ed -L -u '//stringProp[@name="ThreadGroup.num_threads"]' -v '${{ github.event.inputs.threadCount }}' src/test/jmeter/perf.jmx
+          xmlstarlet sel -t -v '//stringProp[@name="Start users count burst"]' src/test/jmeter/perf.jmx
+          mvn package
+          mvn -q jmeter:jmeter@configuration2 -DjmeterTest=perf.jmx
+
+      - name: Archive results
+        run: |
+          TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y%m%d-%H%M')
+          THREADS=${{ github.event.inputs.threadCount }}
+          FOLDER_NAME="${TIMESTAMP}-${THREADS}threads"
+          mv target/jmeter "$FOLDER_NAME"
+          tar -czf "$FOLDER_NAME.tar.gz" "$FOLDER_NAME"
+          echo "ARCHIVE_NAME=$FOLDER_NAME.tar.gz" >> $GITHUB_ENV
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results
+          path: ${{ env.ARCHIVE_NAME }}

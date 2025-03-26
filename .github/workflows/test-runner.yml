@@ -135,3 +135,43 @@ jobs:
         run: |
           bash 4_open_channel.sh
           bash count_channels.sh
+
+  check-channels:
+    runs-on: [self-hosted, test-03]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+    needs: [open-channel-test-03, open-channel-test-04, open-channel-test-05]
+    steps:
+      - name: Test a to g
+        run: bash 6_test_a_to_g.sh
+
+  shutdown-channel-test-03:
+    runs-on: [self-hosted, test-03]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+    needs: [check-channels]
+    steps:
+      - name: Shutdown Channel
+        run: bash 5_shutdown_channel.sh
+
+  shutdown-channel-test-04:
+    runs-on: [self-hosted, test-04]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+    needs: [check-channels]
+    steps:
+      - name: Shutdown Channel
+        run: bash 5_shutdown_channel.sh
+
+  shutdown-channel-test-05:
+    runs-on: [self-hosted, test-05]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+    needs: [check-channels]
+    steps:
+      - name: Shutdown Channel
+        run: bash 5_shutdown_channel.sh

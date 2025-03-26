@@ -147,6 +147,7 @@ jobs:
         run: bash 6_test_a_to_g.sh
 
   shutdown-channel-test-03:
+    if: always()
     runs-on: [self-hosted, test-03]
     defaults:
       run:
@@ -157,6 +158,7 @@ jobs:
         run: bash 5_shutdown_channel.sh
 
   shutdown-channel-test-04:
+    if: always()
     runs-on: [self-hosted, test-04]
     defaults:
       run:
@@ -167,6 +169,7 @@ jobs:
         run: bash 5_shutdown_channel.sh
 
   shutdown-channel-test-05:
+    if: always()
     runs-on: [self-hosted, test-05]
     defaults:
       run:

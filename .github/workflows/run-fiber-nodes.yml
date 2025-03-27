@@ -18,6 +18,7 @@ jobs:
             cd fiber-stability-test-nodes/remote
             bash 5_shutdown_channel.sh
           fi
+          sleep 30
 
   shutdown-channel-test-04:
     runs-on: [self-hosted, test-04]
@@ -33,6 +34,7 @@ jobs:
             cd fiber-stability-test-nodes/remote
             bash 5_shutdown_channel.sh
           fi
+          sleep 30
 
   shutdown-channel-test-05:
     runs-on: [self-hosted, test-05]
@@ -48,6 +50,7 @@ jobs:
             cd fiber-stability-test-nodes/remote
             bash 5_shutdown_channel.sh
           fi
+          sleep 30
 
   run-on-test-03:
     if: always()
@@ -64,7 +67,6 @@ jobs:
     steps:
       - name: Fund addresses
         run: |
-          sleep 10
           pkill fnn || true
           rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
@@ -96,7 +98,6 @@ jobs:
     steps:
       - name: Clone fiber-stability-test-nodes
         run: |
-          sleep 10
           pkill fnn || true
           rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
@@ -125,7 +126,6 @@ jobs:
     steps:
       - name: Clone fiber-stability-test-nodes
         run: |
-          sleep 10
           pkill fnn || true
           rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git

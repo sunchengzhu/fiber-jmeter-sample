@@ -4,14 +4,67 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-on-test-03:
+  shutdown-channel-test-03:
     runs-on: [self-hosted, test-03]
     defaults:
       run:
         working-directory: /home/ckb/scz
     steps:
+      - name: Shutdown Channel
+        run: |
+          if [ ! -d "fiber-stability-test-nodes" ]; then
+            echo "Directory fiber-stability-test-nodes does not exist"
+          else
+            cd fiber-stability-test-nodes/remote
+            bash 5_shutdown_channel.sh
+          fi
+
+  shutdown-channel-test-04:
+    runs-on: [self-hosted, test-04]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz
+    steps:
+      - name: Shutdown Channel
+        run: |
+          if [ ! -d "fiber-stability-test-nodes" ]; then
+            echo "Directory fiber-stability-test-nodes does not exist"
+          else
+            cd fiber-stability-test-nodes/remote
+            bash 5_shutdown_channel.sh
+          fi
+
+  shutdown-channel-test-05:
+    runs-on: [self-hosted, test-05]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz
+    steps:
+      - name: Shutdown Channel
+        run: |
+          if [ ! -d "fiber-stability-test-nodes" ]; then
+            echo "Directory fiber-stability-test-nodes does not exist"
+          else
+            cd fiber-stability-test-nodes/remote
+            bash 5_shutdown_channel.sh
+          fi
+
+  run-on-test-03:
+    if: always()
+    runs-on: [self-hosted, test-03]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz
+    needs:
+      [
+        shutdown-channel-test-03,
+        shutdown-channel-test-04,
+        shutdown-channel-test-05,
+      ]
+    steps:
       - name: Fund addresses
         run: |
+          sleep 10
           pkill fnn || true
           rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
@@ -29,13 +82,21 @@ jobs:
           sudo journalctl -u fnn.service --since "1 minutes ago"
 
   run-on-test-04:
+    if: always()
     runs-on: [self-hosted, test-04]
     defaults:
       run:
         working-directory: /home/ckb/scz
+    needs:
+      [
+        shutdown-channel-test-03,
+        shutdown-channel-test-04,
+        shutdown-channel-test-05,
+      ]
     steps:
       - name: Clone fiber-stability-test-nodes
         run: |
+          sleep 10
           pkill fnn || true
           rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
@@ -50,13 +111,21 @@ jobs:
           sudo journalctl -u fnn.service --since "1 minutes ago"
 
   run-on-test-05:
+    if: always()
     runs-on: [self-hosted, test-05]
     defaults:
       run:
         working-directory: /home/ckb/scz
+    needs:
+      [
+        shutdown-channel-test-03,
+        shutdown-channel-test-04,
+        shutdown-channel-test-05,
+      ]
     steps:
       - name: Clone fiber-stability-test-nodes
         run: |
+          sleep 10
           pkill fnn || true
           rm -rf fiber-stability-test-nodes
           git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
@@ -147,36 +216,3 @@ jobs:
         run: |
           bash 6_test_a_to_g.sh
           bash count_channels.sh
-
-  # shutdown-channel-test-03:
-  #   if: always()
-  #   runs-on: [self-hosted, test-03]
-  #   defaults:
-  #     run:
-  #       working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-  #   needs: [check-channels]
-  #   steps:
-  #     - name: Shutdown Channel
-  #       run: bash 5_shutdown_channel.sh
-
-  # shutdown-channel-test-04:
-  #   if: always()
-  #   runs-on: [self-hosted, test-04]
-  #   defaults:
-  #     run:
-  #       working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-  #   needs: [check-channels]
-  #   steps:
-  #     - name: Shutdown Channel
-  #       run: bash 5_shutdown_channel.sh
-
-  # shutdown-channel-test-05:
-  #   if: always()
-  #   runs-on: [self-hosted, test-05]
-  #   defaults:
-  #     run:
-  #       working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-  #   needs: [check-channels]
-  #   steps:
-  #     - name: Shutdown Channel
-  #       run: bash 5_shutdown_channel.sh

@@ -191,7 +191,13 @@ jobs:
     defaults:
       run:
         working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [connect-peer-test-03, connect-peer-test-04, connect-peer-test-05]
+    needs:
+      [
+        connect-peer-test-03,
+        connect-peer-test-04,
+        connect-peer-test-05,
+        open-channel-test-03,
+      ]
     steps:
       - name: Open channel
         run: |
@@ -203,7 +209,13 @@ jobs:
     defaults:
       run:
         working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [connect-peer-test-03, connect-peer-test-04, connect-peer-test-05]
+    needs:
+      [
+        connect-peer-test-03,
+        connect-peer-test-04,
+        connect-peer-test-05,
+        open-channel-test-04,
+      ]
     steps:
       - name: Open channel
         run: |

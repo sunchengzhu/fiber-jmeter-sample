@@ -217,7 +217,7 @@ jobs:
         working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
     needs: [open-channel-test-03, open-channel-test-04, open-channel-test-05]
     steps:
-      - name: Test a to g
+      - name: Test e to g
         run: |
-          bash 6_test_a_to_g.sh
+          bash 6_test_e_to_g.sh
           bash count_channels.sh

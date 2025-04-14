@@ -85,7 +85,7 @@ jobs:
       - name: Prepare
         run: |
           cd fiber-stability-test-nodes/remote
-          bash 1_prepare.sh ${{ github.event.inputs.fiber_version }}
+          bash 1_prepare.sh "${{ github.event.inputs.fiber_version }}"
       - name: Run
         run: |
           sudo systemctl start fnn.service
@@ -113,7 +113,7 @@ jobs:
       - name: Prepare
         run: |
           cd fiber-stability-test-nodes/remote
-          bash 1_prepare.sh ${{ github.event.inputs.fiber_version }}
+          bash 1_prepare.sh "${{ github.event.inputs.fiber_version }}"
       - name: Run
         run: |
           sudo systemctl start fnn.service
@@ -187,7 +187,7 @@ jobs:
     steps:
       - name: Open channel
         run: |
-          bash 4_open_channel.sh ${{ github.event.inputs.open_channel_count }}"
+          bash 4_open_channel.sh "${{ github.event.inputs.open_channel_count }}"
           bash count_channels.sh
 
   open-channel-test-04:
@@ -205,7 +205,7 @@ jobs:
     steps:
       - name: Open channel
         run: |
-          bash 4_open_channel.sh ${{ github.event.inputs.open_channel_count }}"
+          bash 4_open_channel.sh "${{ github.event.inputs.open_channel_count }}"
           bash count_channels.sh
 
   open-channel-test-05:

@@ -235,5 +235,5 @@ jobs:
     steps:
       - name: Test e to g
         run: |
-          bash 6_test_e_to_g.sh
+          bash 6_test_a_to_g.sh
           bash count_channels.sh

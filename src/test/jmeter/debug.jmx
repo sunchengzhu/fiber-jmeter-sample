@@ -31,12 +31,12 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="rpcUrl" elementType="Argument">
                 <stringProp name="Argument.name">rpcUrl</stringProp>
-                <stringProp name="Argument.value">http://172.31.23.160:8231</stringProp>
+                <stringProp name="Argument.value">http://172.31.28.209:8231</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="targetRpcUrl" elementType="Argument">
                 <stringProp name="Argument.name">targetRpcUrl</stringProp>
-                <stringProp name="Argument.value">http://172.31.23.160:8233</stringProp>
+                <stringProp name="Argument.value">http://172.31.28.209:8233</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="timeOut" elementType="Argument">

@@ -45,34 +45,13 @@ jobs:
           fi
           sleep 30
 
-  shutdown-channel-test-05:
-    runs-on: [self-hosted, test-05]
-    defaults:
-      run:
-        working-directory: /home/ckb/scz
-    steps:
-      - name: Shutdown Channel
-        run: |
-          if [ ! -d "fiber-stability-test-nodes" ]; then
-            echo "Directory fiber-stability-test-nodes does not exist"
-          else
-            cd fiber-stability-test-nodes/remote
-            bash 5_shutdown_channel.sh
-          fi
-          sleep 30
-
   run-on-test-03:
     if: always()
     runs-on: [self-hosted, test-03]
     defaults:
       run:
         working-directory: /home/ckb/scz
-    needs:
-      [
-        shutdown-channel-test-03,
-        shutdown-channel-test-04,
-        shutdown-channel-test-05,
-      ]
+    needs: [shutdown-channel-test-03, shutdown-channel-test-04]
     steps:
       - name: Fund addresses
         run: |
@@ -98,12 +77,7 @@ jobs:
     defaults:
       run:
         working-directory: /home/ckb/scz
-    needs:
-      [
-        shutdown-channel-test-03,
-        shutdown-channel-test-04,
-        shutdown-channel-test-05,
-      ]
+    needs: [shutdown-channel-test-03, shutdown-channel-test-04]
     steps:
       - name: Clone fiber-stability-test-nodes
         run: |
@@ -126,12 +100,7 @@ jobs:
     defaults:
       run:
         working-directory: /home/ckb/scz
-    needs:
-      [
-        shutdown-channel-test-03,
-        shutdown-channel-test-04,
-        shutdown-channel-test-05,
-      ]
+    needs: [shutdown-channel-test-03, shutdown-channel-test-04]
     steps:
       - name: Clone fiber-stability-test-nodes
         run: |
@@ -231,8 +200,8 @@ jobs:
     defaults:
       run:
         working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [ open-channel-test-03, open-channel-test-04, open-channel-test-05 ]
-#    needs: [open-channel-test-03, open-channel-test-04]
+    needs: [open-channel-test-03, open-channel-test-04, open-channel-test-05]
+    #    needs: [open-channel-test-03, open-channel-test-04]
     steps:
       - name: Test a to g
         run: |

@@ -94,35 +94,35 @@ jobs:
           sleep 10
           sudo journalctl -u fnn.service --since "1 minutes ago"
 
-#  run-on-test-05:
-#    if: always()
-#    runs-on: [self-hosted, test-05]
-#    defaults:
-#      run:
-#        working-directory: /home/ckb/scz
-#    needs: [shutdown-channel-test-03, shutdown-channel-test-04]
-#    steps:
-#      - name: Clone fiber-stability-test-nodes
-#        run: |
-#          pkill fnn || true
-#          rm -rf fiber-stability-test-nodes
-#          git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
-#      - name: Prepare
-#        run: |
-#          cd fiber-stability-test-nodes/remote
-#          bash 1_prepare.sh "${{ github.event.inputs.fiber_version }}"
-#      - name: Run
-#        run: |
-#          sudo systemctl start fnn.service
-#          sleep 10
-#          sudo journalctl -u fnn.service --since "1 minutes ago"
+  run-on-test-05:
+    if: always()
+    runs-on: [self-hosted, test-05]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz
+    needs: [shutdown-channel-test-03, shutdown-channel-test-04]
+    steps:
+      - name: Clone fiber-stability-test-nodes
+        run: |
+          pkill fnn || true
+          rm -rf fiber-stability-test-nodes
+          git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
+      - name: Prepare
+        run: |
+          cd fiber-stability-test-nodes/remote
+          bash 1_prepare.sh "${{ github.event.inputs.fiber_version }}"
+      - name: Run
+        run: |
+          sudo systemctl start fnn.service
+          sleep 10
+          sudo journalctl -u fnn.service --since "1 minutes ago"
 
   connect-peer-test-03:
     runs-on: [self-hosted, test-03]
     defaults:
       run:
         working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [run-on-test-03, run-on-test-04]
+    needs: [run-on-test-03, run-on-test-04, run-on-test-05]
     steps:
       - name: Connect Peer
         run: bash 3_connect_peer.sh
@@ -132,7 +132,7 @@ jobs:
     defaults:
       run:
         working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [run-on-test-03, run-on-test-04]
+    needs: [run-on-test-03, run-on-test-04, run-on-test-05]
     steps:
       - name: Connect Peer
         run: bash 3_connect_peer.sh
@@ -154,42 +154,31 @@ jobs:
     defaults:
       run:
         working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs:
-      [
-        connect-peer-test-03,
-        connect-peer-test-04,
-        open-channel-test-03,
-      ]
+    needs: [connect-peer-test-03, connect-peer-test-04, open-channel-test-03]
     steps:
       - name: Open channel
         run: |
           bash 4_open_channel.sh "${{ github.event.inputs.open_channel_count }}"
           bash count_channels.sh
 
-  open-channel-test-05:
-    runs-on: [self-hosted, test-05]
-    defaults:
-      run:
-        working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs:
-      [
-        connect-peer-test-03,
-        connect-peer-test-04,
-        open-channel-test-04,
-      ]
-    steps:
-      - name: Open channel
-        run: |
-          bash 4_open_channel.sh
-          bash count_channels.sh
+  # open-channel-test-05:
+  #   runs-on: [self-hosted, test-05]
+  #   defaults:
+  #     run:
+  #       working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
+  #   needs: [connect-peer-test-03, connect-peer-test-04, open-channel-test-04]
+  #   steps:
+  #     - name: Open channel
+  #       run: |
+  #         bash 4_open_channel.sh
+  #         bash count_channels.sh
 
   check-channels:
     runs-on: [self-hosted, test-03]
     defaults:
       run:
         working-directory: /home/ckb/scz/fiber-stability-test-nodes/remote
-    needs: [open-channel-test-03, open-channel-test-04, open-channel-test-05]
-    #    needs: [open-channel-test-03, open-channel-test-04]
+    needs: [open-channel-test-03, open-channel-test-04]
     steps:
       - name: Test a to g
         run: |

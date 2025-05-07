@@ -61,8 +61,8 @@ jobs:
           mvn -q package
           mvn -q jmeter:jmeter@configuration2 -DjmeterTest=perf.jmx
           if [ "$CURRENT_THREAD" != "$END_THREAD" ]; then
-            echo "Not the last test run, sleeping 120 seconds..."
-            sleep 120
+            echo "Not the last test run, sleeping 180 seconds..."
+            sleep 180
           else
             echo "Last test run, skipping sleep."
           fi

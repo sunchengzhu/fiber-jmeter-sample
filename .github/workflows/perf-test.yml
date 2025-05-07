@@ -10,7 +10,11 @@ on:
       endThreadsCount:
         description: "End thread count"
         required: false
-        default: "6"
+        default: "20"
+      step:
+        description: "Step size"
+        required: false
+        default: "2"
 
 jobs:
   generate-matrix:
@@ -22,11 +26,13 @@ jobs:
         run: |
           start=${{ github.event.inputs.startThreadsCount }}
           end=${{ github.event.inputs.endThreadsCount }}
+          step=${{ github.event.inputs.step }}
+
           arr=()
-          for ((i=start; i<=end; i++)); do
+          for ((i=start; i<=end; i+=step)); do
             arr+=($i)
           done
-          # 生成紧凑的 JSON 数组，避免换行问题
+
           json=$(printf '%s\n' "${arr[@]}" | jq -R . | jq -s -c .)
           echo "matrix=$json" >> $GITHUB_OUTPUT
 
@@ -55,8 +61,8 @@ jobs:
           mvn -q package
           mvn -q jmeter:jmeter@configuration2 -DjmeterTest=perf.jmx
           if [ "$CURRENT_THREAD" != "$END_THREAD" ]; then
-            echo "Not the last test run, sleeping 300 seconds..."
-            sleep 300
+            echo "Not the last test run, sleeping 120 seconds..."
+            sleep 120
           else
             echo "Last test run, skipping sleep."
           fi

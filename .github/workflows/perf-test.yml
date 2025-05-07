@@ -29,8 +29,16 @@ jobs:
           step=${{ github.event.inputs.step }}
 
           arr=()
-          for ((i=start; i<=end; i+=step)); do
+          for ((i=start; i<=end; )); do
             arr+=($i)
+            if [ "$i" -lt 20 ]; then
+              i=$((i + step))
+              if [ "$i" -gt 20 ]; then
+                i=20
+              fi
+            else
+              i=$((i + 5))
+            fi
           done
 
           json=$(printf '%s\n' "${arr[@]}" | jq -R . | jq -s -c .)

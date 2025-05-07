@@ -10,11 +10,7 @@ on:
       endThreadsCount:
         description: "End thread count"
         required: false
-        default: "20"
-      step:
-        description: "Step size"
-        required: false
-        default: "2"
+        default: "30"
 
 jobs:
   generate-matrix:
@@ -26,7 +22,7 @@ jobs:
         run: |
           start=${{ github.event.inputs.startThreadsCount }}
           end=${{ github.event.inputs.endThreadsCount }}
-          step=${{ github.event.inputs.step }}
+          step=2
 
           arr=()
           for ((i=start; i<=end; )); do

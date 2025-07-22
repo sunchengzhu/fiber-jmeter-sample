@@ -22,7 +22,7 @@ jobs:
         run: |
           start=${{ github.event.inputs.startThreadsCount }}
           end=${{ github.event.inputs.endThreadsCount }}
-          step=2
+          step=1
 
           arr=()
           for ((i=start; i<=end; )); do

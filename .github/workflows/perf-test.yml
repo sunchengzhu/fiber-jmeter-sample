@@ -11,6 +11,18 @@ on:
         description: "End thread count"
         required: false
         default: "30"
+      repeatCount:
+        description: "Repeat the whole job N times"
+        required: false
+        default: "1"
+      sleepBetweenThreadsSec:
+        description: "Sleep seconds between threads (within the same attempt)"
+        required: false
+        default: "300"
+      sleepBetweenAttemptsSec:
+        description: "Sleep seconds between attempts (between last thread of an attempt and next attempt)"
+        required: false
+        default: "600"
 
 jobs:
   generate-matrix:
@@ -19,14 +31,16 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - id: set-matrix
+        shell: bash
         run: |
-          start=${{ github.event.inputs.startThreadsCount }}
-          end=${{ github.event.inputs.endThreadsCount }}
+          start='${{ github.event.inputs.startThreadsCount }}'
+          end='${{ github.event.inputs.endThreadsCount }}'
           step=2
 
           arr=()
-          for ((i=start; i<=end; )); do
-            arr+=($i)
+          i="$start"
+          while [ "$i" -le "$end" ]; do
+            arr+=("$i")
             if [ "$i" -lt 20 ]; then
               i=$((i + step))
               if [ "$i" -gt 20 ]; then
@@ -38,49 +52,82 @@ jobs:
           done
 
           json=$(printf '%s\n' "${arr[@]}" | jq -R . | jq -s -c .)
-          echo "matrix=$json" >> $GITHUB_OUTPUT
+          echo "matrix=$json" >> "$GITHUB_OUTPUT"
+
+  generate-attempts:
+    runs-on: ubuntu-latest
+    outputs:
+      attempts: ${{ steps.mk.outputs.attempts }}
+    steps:
+      - id: mk
+        shell: bash
+        run: |
+          n='${{ github.event.inputs.repeatCount }}'
+          # 生成 [1..n] 的 JSON 数组
+          seq 1 "$n" | jq -R . | jq -s -c . | awk '{print "attempts="$0}' >> "$GITHUB_OUTPUT"
 
   perf-test:
-    needs: generate-matrix
+    needs: [generate-matrix, generate-attempts]
     runs-on: [self-hosted, test-02]
     strategy:
-      max-parallel: 1 # 顺序执行
+      fail-fast: false
+      max-parallel: 1      # 全部串行（跨 attempt 与 thread）
       matrix:
-        thread: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+        attempt: ${{ fromJson(needs.generate-attempts.outputs.attempts) }}
+        thread:  ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Configure JMX
+        shell: bash
         run: |
-          echo "Setting thread count to ${{ matrix.thread }}"
-          xmlstarlet ed -L -u '//stringProp[@name="ThreadGroup.num_threads"]' -v '${{ matrix.thread }}' src/test/jmeter/perf.jmx
+          echo "Attempt = ${{ matrix.attempt }}, Thread = ${{ matrix.thread }}"
+          xmlstarlet ed -L \
+            -u '//stringProp[@name="ThreadGroup.num_threads"]' \
+            -v '${{ matrix.thread }}' \
+            src/test/jmeter/perf.jmx
           echo "Current thread count: $(xmlstarlet sel -t -v '//stringProp[@name="ThreadGroup.num_threads"]' src/test/jmeter/perf.jmx)"
 
       - name: Run JMeter Test
         env:
           CURRENT_THREAD: ${{ matrix.thread }}
           END_THREAD: ${{ github.event.inputs.endThreadsCount }}
+          ATTEMPT: ${{ matrix.attempt }}
+          REPEAT: ${{ github.event.inputs.repeatCount }}
+          SLEEP_THREADS: ${{ github.event.inputs.sleepBetweenThreadsSec }}
+          SLEEP_ATTEMPTS: ${{ github.event.inputs.sleepBetweenAttemptsSec }}
+        shell: bash
         run: |
           mvn -q package
           mvn -q jmeter:jmeter@configuration2 -DjmeterTest=perf.jmx
-          if [ "$CURRENT_THREAD" != "$END_THREAD" ]; then
-            echo "Not the last test run, sleeping 300 seconds..."
-            sleep 300
+
+          # 是否最后一个线程？
+          if [ "$CURRENT_THREAD" = "$END_THREAD" ]; then
+            # 是否最后一次 attempt？
+            if [ "$ATTEMPT" = "$REPEAT" ]; then
+              echo "Last attempt & last thread: no sleep."
+            else
+              echo "End of attempt $ATTEMPT: sleeping $SLEEP_ATTEMPTS seconds before next attempt..."
+              sleep "$SLEEP_ATTEMPTS"
+            fi
           else
-            echo "Last test run, skipping sleep."
+            echo "Between threads in attempt $ATTEMPT: sleeping $SLEEP_THREADS seconds..."
+            sleep "$SLEEP_THREADS"
           fi
 
       - name: Archive report
+        shell: bash
         run: |
-          TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y%m%d-%H%M')
-          REPORT_DIR="${TIMESTAMP}-${{ matrix.thread }}threads"
+          TZ='Asia/Shanghai' date '+%Y%m%d-%H%M' > /tmp/ts.txt
+          TIMESTAMP=$(cat /tmp/ts.txt)
+          REPORT_DIR="${TIMESTAMP}-attempt${{ matrix.attempt }}-${{ matrix.thread }}threads"
           REPORT_NAME="${REPORT_DIR}.tar.gz"
           mv target/jmeter "$REPORT_DIR"
           tar -czf "$REPORT_NAME" "$REPORT_DIR"
           echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
           echo "REPORT_NAME=$REPORT_NAME" >> $GITHUB_ENV
-        shell: bash
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4

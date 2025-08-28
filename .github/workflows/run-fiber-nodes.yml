@@ -6,7 +6,7 @@ on:
       fiber_version:
         description: "Fiber version"
         required: false
-        default: "latest"
+        default: "develop"
       open_channel_count:
         description: "Open channel count"
         required: false

@@ -18,11 +18,15 @@ on:
       sleepBetweenThreadsSec:
         description: "Sleep seconds between threads (within the same attempt)"
         required: false
-        default: "300"
+        default: "420"
       sleepBetweenAttemptsSec:
         description: "Sleep seconds between attempts (between last thread of an attempt and next attempt)"
         required: false
         default: "600"
+      stepThreadsCount:
+        description: "Step increase before 20"
+        required: false
+        default: "2"
 
 jobs:
   generate-matrix:
@@ -35,7 +39,7 @@ jobs:
         run: |
           start='${{ github.event.inputs.startThreadsCount }}'
           end='${{ github.event.inputs.endThreadsCount }}'
-          step=2
+          step='${{ github.event.inputs.stepThreadsCount }}'
 
           arr=()
           i="$start"

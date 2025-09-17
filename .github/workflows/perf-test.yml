@@ -124,6 +124,9 @@ jobs:
           echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
           echo "REPORT_NAME=$REPORT_NAME" >> $GITHUB_ENV
 
+      - name: Extract throughput
+        run: bash scripts/extract_throughput.sh "$REPORT_DIR"
+
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:

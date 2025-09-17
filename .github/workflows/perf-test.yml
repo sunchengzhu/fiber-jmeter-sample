@@ -124,11 +124,21 @@ jobs:
           echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
           echo "REPORT_NAME=$REPORT_NAME" >> $GITHUB_ENV
 
-      - name: Extract throughput
-        run: bash scripts/extract_throughput.sh "$REPORT_DIR"
-
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.REPORT_DIR }}
           path: ${{ env.REPORT_NAME }}
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Extract throughput (all at once)
+        shell: bash
+        run: |
+          bash scripts/extract_throughput.sh artifacts/*threads.tar.gz > summary.txt
+          echo "---- Summary ----"
+          cat summary.txt

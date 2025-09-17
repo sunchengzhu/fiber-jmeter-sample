@@ -17,7 +17,7 @@ on:
       startThreadsCount:
         description: "Start thread count"
         required: false
-        default: "4"
+        default: "2"
       endThreadsCount:
         description: "End thread count"
         required: false

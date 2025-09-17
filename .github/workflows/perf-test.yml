@@ -3,7 +3,7 @@ name: Perf Test
 on:
   workflow_dispatch:
     inputs:
-      startThreadsCount:        { description: "Start thread count", required: false, default: "4" }
+      startThreadsCount:        { description: "Start thread count", required: false, default: "2" }
       endThreadsCount:          { description: "End thread count",   required: false, default: "30" }
       repeatCount:              { description: "Repeat the whole job N times", required: false, default: "1" }
       sleepBetweenThreadsSec:   { description: "Sleep seconds between threads", required: false, default: "420" }

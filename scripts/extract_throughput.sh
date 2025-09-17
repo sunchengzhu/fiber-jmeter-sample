@@ -144,7 +144,7 @@ done
 
 # Markdown 表格输出
 {
-  echo '| 线程数 | TPS |'
+  echo '| Threads | TPS |'
   echo '| ------ | ---- |'
   sort -n "$tmp_file" | awk '!seen[$1]++ { printf("| %d | %.2f |\n", $1, $2) }'
 }

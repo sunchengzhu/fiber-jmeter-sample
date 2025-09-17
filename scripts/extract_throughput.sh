@@ -142,6 +142,11 @@ for dir in "${threads_dirs[@]}"; do
   emit_one_dir "$dir" >>"$tmp_file"
 done
 
-# 按线程数数值排序去重输出
-sort -n "$tmp_file" | awk '!seen[$1]++'
+# Markdown 表格输出
+{
+  echo '| 线程数 | TPS |'
+  echo '| ------ | ---- |'
+  sort -n "$tmp_file" | awk '!seen[$1]++ { printf("| %d | %.2f |\n", $1, $2) }'
+}
+
 rm -f "$tmp_file"

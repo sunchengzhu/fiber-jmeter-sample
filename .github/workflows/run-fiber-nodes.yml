@@ -12,6 +12,17 @@ on:
         required: false
         default: "1"
 
+  workflow_call:
+    inputs:
+      fiber_version:
+        type: string
+        required: false
+        default: "develop"
+      open_channel_count:
+        type: string
+        required: false
+        default: "1"
+
 jobs:
   shutdown-channel-test-03:
     runs-on: [self-hosted, test-03]

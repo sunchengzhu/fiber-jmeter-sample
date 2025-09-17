@@ -1,0 +1,64 @@
+name: All (Run Nodes first, then Perf)
+
+on:
+  workflow_dispatch:
+    inputs:
+      # run-fiber-nodes.yml 参数
+      fiber_version:
+        description: "Fiber version"
+        required: false
+        default: "develop"
+      open_channel_count:
+        description: "Open channel count"
+        required: false
+        default: "1"
+
+      # perf-test.yml 参数
+      startThreadsCount:
+        description: "Start thread count"
+        required: false
+        default: "4"
+      endThreadsCount:
+        description: "End thread count"
+        required: false
+        default: "30"
+      repeatCount:
+        description: "Repeat the whole job N times"
+        required: false
+        default: "1"
+      sleepBetweenThreadsSec:
+        description: "Sleep seconds between threads"
+        required: false
+        default: "420"
+      sleepBetweenAttemptsSec:
+        description: "Sleep seconds between attempts"
+        required: false
+        default: "600"
+      stepThreadsCount:
+        description: "Step increase before 20"
+        required: false
+        default: "2"
+
+jobs:
+  run_nodes:
+    name: Run Fiber Testnet Nodes
+    uses: ./.github/workflows/run-fiber-nodes.yml
+    with:
+      fiber_version: ${{ github.event.inputs.fiber_version }}
+      open_channel_count: ${{ github.event.inputs.open_channel_count }}
+    secrets: inherit
+
+  perf:
+    name: Perf Test
+    needs: run_nodes
+    # 只有 run_nodes 成功才会执行；失败或取消都不会跑本 job
+    if: ${{ needs.run_nodes.result == 'success' }}
+    uses: ./.github/workflows/perf-test.yml
+    with:
+      startThreadsCount: ${{ github.event.inputs.startThreadsCount }}
+      endThreadsCount: ${{ github.event.inputs.endThreadsCount }}
+      repeatCount: ${{ github.event.inputs.repeatCount }}
+      sleepBetweenThreadsSec: ${{ github.event.inputs.sleepBetweenThreadsSec }}
+      sleepBetweenAttemptsSec: ${{ github.event.inputs.sleepBetweenAttemptsSec }}
+      stepThreadsCount: ${{ github.event.inputs.stepThreadsCount }}
+    secrets: inherit

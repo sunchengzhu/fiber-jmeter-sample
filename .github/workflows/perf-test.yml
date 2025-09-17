@@ -3,30 +3,21 @@ name: Perf Test
 on:
   workflow_dispatch:
     inputs:
-      startThreadsCount:
-        description: "Start thread count"
-        required: false
-        default: "4"
-      endThreadsCount:
-        description: "End thread count"
-        required: false
-        default: "30"
-      repeatCount:
-        description: "Repeat the whole job N times"
-        required: false
-        default: "1"
-      sleepBetweenThreadsSec:
-        description: "Sleep seconds between threads (within the same attempt)"
-        required: false
-        default: "420"
-      sleepBetweenAttemptsSec:
-        description: "Sleep seconds between attempts (between last thread of an attempt and next attempt)"
-        required: false
-        default: "600"
-      stepThreadsCount:
-        description: "Step increase before 20"
-        required: false
-        default: "2"
+      startThreadsCount:        { description: "Start thread count", required: false, default: "4" }
+      endThreadsCount:          { description: "End thread count",   required: false, default: "30" }
+      repeatCount:              { description: "Repeat the whole job N times", required: false, default: "1" }
+      sleepBetweenThreadsSec:   { description: "Sleep seconds between threads", required: false, default: "420" }
+      sleepBetweenAttemptsSec:  { description: "Sleep seconds between attempts", required: false, default: "600" }
+      stepThreadsCount:         { description: "Step increase before 20", required: false, default: "2" }
+
+  workflow_call:
+    inputs:
+      startThreadsCount:        { type: string, required: false, default: "4" }
+      endThreadsCount:          { type: string, required: false, default: "30" }
+      repeatCount:              { type: string, required: false, default: "1" }
+      sleepBetweenThreadsSec:   { type: string, required: false, default: "420" }
+      sleepBetweenAttemptsSec:  { type: string, required: false, default: "600" }
+      stepThreadsCount:         { type: string, required: false, default: "2" }
 
 jobs:
   generate-matrix:

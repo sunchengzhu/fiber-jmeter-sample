@@ -1,4 +1,4 @@
-name: All (Run Nodes first, then Perf)
+name: All
 
 on:
   workflow_dispatch:

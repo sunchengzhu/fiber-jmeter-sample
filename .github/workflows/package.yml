@@ -8,7 +8,7 @@ on:
         type: string
         required: true
         default: "debug"
-      remote_branch:
+      fiber_branch:
         description: "Optional remote branch (e.g. yukang-perf-debug)"
         type: string
         required: false
@@ -19,7 +19,7 @@ on:
         type: string
         required: true
         default: "debug"
-      remote_branch:
+      fiber_branch:
         type: string
         required: false
         default: ""

@@ -3,8 +3,8 @@ name: Package
 on:
   workflow_dispatch:
     inputs:
-      type:
-        description: "Type (e.g. debug/develop)"
+      fiber_version:
+        description: "Fiber version"
         type: string
         required: true
         default: "debug"
@@ -45,4 +45,4 @@ jobs:
         run: |
           cd fiber-stability-test-nodes/package
           chmod +x package.sh || true
-          bash package.sh "${{ inputs.type }}" "${{ inputs.remote_branch }}"
+          bash package.sh "${{ inputs.fiber_version }}" "${{ inputs.remote_branch }}"

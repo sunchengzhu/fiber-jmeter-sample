@@ -15,7 +15,7 @@ on:
         default: ""
   workflow_call:
     inputs:
-      type:
+      fiber_version:
         type: string
         required: true
         default: "debug"

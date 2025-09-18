@@ -3,11 +3,15 @@ name: All
 on:
   workflow_dispatch:
     inputs:
-      # run-fiber-nodes.yml 参数
+      # run-fiber-nodes.yml & package.yml 参数
       fiber_version:
         description: "Fiber version"
         required: false
         default: "develop"
+      fiber_branch:
+        description: "Optional fiber branch (e.g. yukang-perf-debug)"
+        required: false
+        default: ""
       open_channel_count:
         description: "Open channel count"
         required: false
@@ -40,8 +44,17 @@ on:
         default: "2"
 
 jobs:
+  package:
+    name: Package
+    uses: ./.github/workflows/package.yml
+    with:
+      fiber_version: ${{ github.event.inputs.fiber_version }}
+      fiber_branch: ${{ github.event.inputs.fiber_branch }}
+    secrets: inherit
+
   run_nodes:
     name: Run Fiber Testnet Nodes
+    needs: package
     uses: ./.github/workflows/run-fiber-nodes.yml
     with:
       fiber_version: ${{ github.event.inputs.fiber_version }}

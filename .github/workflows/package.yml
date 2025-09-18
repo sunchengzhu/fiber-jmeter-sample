@@ -1,0 +1,48 @@
+name: Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: "Type (e.g. debug/develop)"
+        type: string
+        required: true
+        default: "debug"
+      remote_branch:
+        description: "Optional remote branch (e.g. yukang-perf-debug)"
+        type: string
+        required: false
+        default: ""
+  workflow_call:
+    inputs:
+      type:
+        type: string
+        required: true
+        default: "debug"
+      remote_branch:
+        type: string
+        required: false
+        default: ""
+
+jobs:
+  run-on-test-02:
+    runs-on: [self-hosted, test-02]
+    defaults:
+      run:
+        working-directory: /home/ckb/scz
+    steps:
+      - name: Prepare repo (clone or update)
+        run: |
+          if [ ! -d "fiber-stability-test-nodes/.git" ]; then
+            git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
+          else
+            cd fiber-stability-test-nodes
+            git fetch --all --prune
+            git reset --hard origin/$(git symbolic-ref --short HEAD || echo main) || true
+          fi
+
+      - name: Run package.sh with inputs
+        run: |
+          cd fiber-stability-test-nodes/package
+          chmod +x package.sh || true
+          bash ./package.sh "${{ inputs.type }}" "${{ inputs.remote_branch }}"

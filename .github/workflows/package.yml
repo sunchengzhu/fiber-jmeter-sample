@@ -9,7 +9,12 @@ on:
         required: true
         default: "debug"
       fiber_branch:
-        description: "Optional remote branch (e.g. yukang-perf-debug)"
+        description: "Optional fiber branch (e.g. yukang-perf-debug)"
+        type: string
+        required: false
+        default: ""
+      commit:
+        description: "Optional commit SHA"
         type: string
         required: false
         default: ""
@@ -20,6 +25,10 @@ on:
         required: true
         default: "debug"
       fiber_branch:
+        type: string
+        required: false
+        default: ""
+      commit:
         type: string
         required: false
         default: ""
@@ -38,11 +47,28 @@ jobs:
           else
             cd fiber-stability-test-nodes
             git fetch --all --prune
-            git reset --hard origin/$(git symbolic-ref --short HEAD || echo main) || true
           fi
+
+      - name: Checkout commit or branch
+        run: |
+          cd fiber-stability-test-nodes
+          if [ -n "${{ inputs.commit }}" ]; then
+            echo "Checkout commit ${{ inputs.commit }}"
+            git fetch --all --prune
+            git checkout --detach "${{ inputs.commit }}"
+          elif [ -n "${{ inputs.fiber_branch }}" ]; then
+            echo "Reset to origin/${{ inputs.fiber_branch }}"
+            git fetch origin "${{ inputs.fiber_branch }}" || true
+            git reset --hard "origin/${{ inputs.fiber_branch }}"
+          else
+            echo "Reset to origin/develop (default)"
+            git fetch origin develop || true
+            git reset --hard origin/develop
+          fi
+          git rev-parse --short HEAD
 
       - name: Run package.sh with inputs
         run: |
           cd fiber-stability-test-nodes/package
           chmod +x package.sh || true
-          bash package.sh "${{ inputs.fiber_version }}" "${{ inputs.remote_branch }}"
+          bash package.sh "${{ inputs.fiber_version }}" "${{ inputs.fiber_branch }}"

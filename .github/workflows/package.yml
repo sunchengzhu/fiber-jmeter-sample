@@ -40,14 +40,10 @@ jobs:
       run:
         working-directory: /home/ckb/scz
     steps:
-      - name: Prepare repo (clone or update)
+      - name: Fresh clone fiber-stability-test-nodes
         run: |
-          if [ ! -d "fiber-stability-test-nodes/.git" ]; then
-            git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
-          else
-            cd fiber-stability-test-nodes
-            git fetch --all --prune
-          fi
+          rm -rf fiber-stability-test-nodes
+          git clone https://github.com/sunchengzhu/fiber-stability-test-nodes.git
 
       - name: Run package.sh with inputs
         run: |

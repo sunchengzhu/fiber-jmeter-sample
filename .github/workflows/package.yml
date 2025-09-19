@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       fiber_version:
-        description: "Fiber version"
+        description: "Fiber version (e.g. debug/develop/mpp)"
         type: string
         required: true
         default: "debug"
@@ -49,26 +49,8 @@ jobs:
             git fetch --all --prune
           fi
 
-      - name: Checkout commit or branch
-        run: |
-          cd fiber-stability-test-nodes
-          if [ -n "${{ inputs.commit }}" ]; then
-            echo "Checkout commit ${{ inputs.commit }}"
-            git fetch --all --prune
-            git checkout --detach "${{ inputs.commit }}"
-          elif [ -n "${{ inputs.fiber_branch }}" ]; then
-            echo "Reset to origin/${{ inputs.fiber_branch }}"
-            git fetch origin "${{ inputs.fiber_branch }}" || true
-            git reset --hard "origin/${{ inputs.fiber_branch }}"
-          else
-            echo "Reset to origin/develop (default)"
-            git fetch origin develop || true
-            git reset --hard origin/develop
-          fi
-          git rev-parse --short HEAD
-
       - name: Run package.sh with inputs
         run: |
           cd fiber-stability-test-nodes/package
           chmod +x package.sh || true
-          bash package.sh "${{ inputs.fiber_version }}" "${{ inputs.fiber_branch }}"
+          bash package.sh "${{ inputs.fiber_version }}" "${{ inputs.fiber_branch }}" "${{ inputs.commit }}"

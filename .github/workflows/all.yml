@@ -12,6 +12,10 @@ on:
         description: "Optional fiber branch (e.g. yukang-perf-debug)"
         required: false
         default: ""
+      commit:
+        description: "Optional commit SHA"
+        required: false
+        default: ""
       open_channel_count:
         description: "Open channel count"
         required: false
@@ -49,7 +53,8 @@ jobs:
     uses: ./.github/workflows/package.yml
     with:
       fiber_version: ${{ github.event.inputs.fiber_version }}
-      fiber_branch: ${{ github.event.inputs.fiber_branch }}
+      fiber_branch:  ${{ github.event.inputs.fiber_branch }}
+      commit:        ${{ github.event.inputs.commit }}
     secrets: inherit
 
   run_nodes:
@@ -57,21 +62,20 @@ jobs:
     needs: package
     uses: ./.github/workflows/run-fiber-nodes.yml
     with:
-      fiber_version: ${{ github.event.inputs.fiber_version }}
+      fiber_version:     ${{ github.event.inputs.fiber_version }}
       open_channel_count: ${{ github.event.inputs.open_channel_count }}
     secrets: inherit
 
   perf:
     name: Perf Test
     needs: run_nodes
-    # 只有 run_nodes 成功才会执行；失败或取消都不会跑本 job
     if: ${{ needs.run_nodes.result == 'success' }}
     uses: ./.github/workflows/perf-test.yml
     with:
-      startThreadsCount: ${{ github.event.inputs.startThreadsCount }}
-      endThreadsCount: ${{ github.event.inputs.endThreadsCount }}
-      repeatCount: ${{ github.event.inputs.repeatCount }}
-      sleepBetweenThreadsSec: ${{ github.event.inputs.sleepBetweenThreadsSec }}
-      sleepBetweenAttemptsSec: ${{ github.event.inputs.sleepBetweenAttemptsSec }}
-      stepThreadsCount: ${{ github.event.inputs.stepThreadsCount }}
+      startThreadsCount:        ${{ github.event.inputs.startThreadsCount }}
+      endThreadsCount:          ${{ github.event.inputs.endThreadsCount }}
+      repeatCount:              ${{ github.event.inputs.repeatCount }}
+      sleepBetweenThreadsSec:   ${{ github.event.inputs.sleepBetweenThreadsSec }}
+      sleepBetweenAttemptsSec:  ${{ github.event.inputs.sleepBetweenAttemptsSec }}
+      stepThreadsCount:         ${{ github.event.inputs.stepThreadsCount }}
     secrets: inherit
